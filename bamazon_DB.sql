@@ -26,3 +26,5 @@ VALUES ("Toilet paper - 4 Roll Pack", "Bathroom", 4.00, 30),
     ("Genuine Unicorn Poop", "Arcane", 1500.00, 2),
     ("Flux Capacitor", "Automotive", 250000.00, 1),
     ("Infinity Gaunlet", "Jewelry", 70000000.00, 1);
+
+    SELECT * FROM products;
