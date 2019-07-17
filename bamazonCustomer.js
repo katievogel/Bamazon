@@ -31,14 +31,15 @@ function showStuff() {
     }
     console.log("\n");
     console.log(table.toString());
-  })
+    shopSearch();
+  });
 };
 
 connection.connect(function (err) {
   if (err) throw err;
   console.log("Welcome to Bamazon!")
   showStuff();
-  shopSearch();
+  
 });
 
 function shopSearch() {
@@ -72,7 +73,6 @@ function shopSearch() {
                   type: "confirm"
                 })
                 .then(function (answer3) {
-                console.log(answer3.cont_shop);
                   if (answer3.cont_shop === true) {
                     showStuff();
                     shopSearch();
