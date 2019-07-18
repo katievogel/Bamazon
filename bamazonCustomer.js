@@ -57,15 +57,21 @@ function shopSearch() {
           type: "number"
         })
         .then(function (answer2) {
+
+
+
           var query = "UPDATE products SET stock_qty = stock_qty - ? WHERE item_id = ?";
           connection.query(query, [answer2.qty_buy, answer1.purchase],
             function (err, res) {
               if (err) throw err;
-              var cost = "SELECT price FROM products WHERE item_id = ?";
+              
               connection.query(cost, [answer1.purchase], function (err, res) {
                 var total = res[0].price * answer2.qty_buy;
                 if (err) throw err;
-                console.log('Thank-you for your purchase. Your total is ' + total + ' dollars.');
+                if (answer2.qty_buy > res[0].stock_qty) {
+                  console.log("Insufficient stock. Only " + res[0].stock_qty + " available.");
+                } else {
+                console.log('Thank-you for your purchase. Your total is ' + total + ' dollars.')};
                 inquirer
                 .prompt({
                   name: "cont_shop",
