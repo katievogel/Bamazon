@@ -67,7 +67,6 @@ function shopSearch() {
               }).then(function (answer3) {
                 if (answer3.cont_shop === true) {
                   showStuff();
-                  shopSearch();
                 } else {
                   console.log("Thanks for shopping with us!");
                   connection.end();
@@ -87,7 +86,6 @@ function shopSearch() {
                   }).then(function (answer3) {
                     if (answer3.cont_shop === true) {
                       showStuff();
-                      shopSearch();
                     } else {
                       console.log("Thanks for shopping with us!");
                       connection.end();
