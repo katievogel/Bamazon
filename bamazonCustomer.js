@@ -5,14 +5,11 @@ var Table = require("cli-table");
 var connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 3306
   port: 3306,
 
-  // Your username
   user: "root",
 
-  // Your password
-  password: "38119Peej!!",
+  password: "classpass2019!",
   database: "bamazonDB"
 });
 
@@ -39,7 +36,7 @@ connection.connect(function (err) {
   if (err) throw err;
   console.log("Welcome to Bamazon!")
   showStuff();
-  
+
 });
 
 function shopSearch() {
@@ -57,41 +54,50 @@ function shopSearch() {
           type: "number"
         })
         .then(function (answer2) {
-
-
-
-          var query = "UPDATE products SET stock_qty = stock_qty - ? WHERE item_id = ?";
-          connection.query(query, [answer2.qty_buy, answer1.purchase],
-            function (err, res) {
-              if (err) throw err;
-              
-              connection.query(cost, [answer1.purchase], function (err, res) {
-                var total = res[0].price * answer2.qty_buy;
-                if (err) throw err;
-                if (answer2.qty_buy > res[0].stock_qty) {
-                  console.log("Insufficient stock. Only " + res[0].stock_qty + " available.");
+          var cost = "SELECT * FROM products WHERE item_id = ?";
+          connection.query(cost, [answer1.purchase], function (err, res) {
+            if (err) throw err;
+            var total = res[0].price * answer2.qty_buy;
+            if (answer2.qty_buy > res[0].stock_qty) {
+              console.log("Insufficient stock. Only " + res[0].stock_qty + " available.");
+              inquirer.prompt({
+                name: "cont_shop",
+                message: "Would you like to continue shopping?",
+                type: "confirm"
+              }).then(function (answer3) {
+                if (answer3.cont_shop === true) {
+                  showStuff();
+                  shopSearch();
                 } else {
-                console.log('Thank-you for your purchase. Your total is ' + total + ' dollars.')};
-                inquirer
-                .prompt({
-                  name: "cont_shop",
-                  message: "Would you like to continue shopping?",
-                  type: "confirm"
-                })
-                .then(function (answer3) {
-                  if (answer3.cont_shop === true) {
-                    showStuff();
-                    shopSearch();
-                  } else {
-                    console.log("Thanks for shopping with us!");
-                    connection.end();
-                  }
-                })
+                  console.log("Thanks for shopping with us!");
+                  connection.end();
+                }
               })
-                
             }
-          )
-        }
-        );
+            else {
+              connection.query(
+                "UPDATE products SET stock_qty = stock_qty - ? WHERE item_id = ?",
+                [answer2.qty_buy, answer1.purchase],
+                function (err, res) {
+                  console.log('Thank-you for your purchase. Your total is ' + total + ' dollars.');
+                  inquirer.prompt({
+                    name: "cont_shop",
+                    message: "Would you like to continue shopping?",
+                    type: "confirm"
+                  }).then(function (answer3) {
+                    if (answer3.cont_shop === true) {
+                      showStuff();
+                      shopSearch();
+                    } else {
+                      console.log("Thanks for shopping with us!");
+                      connection.end();
+                    }
+                  })
+                });
+            }
+          });
+        })
     })
+
 }
+;
